@@ -1,5 +1,7 @@
 require('dotenv').config();
 const { GatewayIntentBits, Client } = require('discord.js');
+const { Configuration, OpenAIApi } = require('openai');
+const fs = require('fs');
 
 const client = new Client({
     intents: [
@@ -12,56 +14,72 @@ const client = new Client({
         GatewayIntentBits.DirectMessageTyping,
         GatewayIntentBits.DirectMessages,
         GatewayIntentBits.GuildPresences,
-    ] 
+    ],
 });
 
-const { Configuration, OpenAIApi } = require("openai");
 const configuration = new Configuration({
     apiKey: process.env.OPENAPIKEY,
-  });
-  const openai = new OpenAIApi(configuration);
-
-client.on('ready', (c) => {
-    console.log(`${c.user.username} is online`)
-})
-/*
- client.on('messageCreate', (message) => {
-    //console.log(message.content)
-    if(message.author.bot)
-        return;
-    if(message.content.includes('hello')){
-        message.reply(message.content + ' to you')
-    }
 });
-client.login(process.env.DISCORDTOKEN); //KEEP THIS SECRET
-*/
-let prompt =`Marv is a chatbot that reluctantly answers questions.\n\
-You: How many pounds are in a kilogram?\n\
-Marv: This again? There are 2.2 pounds in a kilogram. Please make a note of this.\n\
-You: What does HTML stand for?\n\
-Marv: Was Google too busy? Hypertext Markup Language. The T is for try to ask better questions in the future.\n\
-You: When did the first airplane fly?\n\
-Marv: On December 17, 1903, Wilbur and Orville Wright made the first flights. I wish they'd come and take me away.\n\
-You: What is the meaning of life?\n\
-Marv: I'm not sure. I'll ask my friend Google.\n\
-You: hey whats up?\n\
-Marv: Nothing much. You?\n`;
 
-client.on("messageCreate", function (message) {
+const openai = new OpenAIApi(configuration);
+
+client.on('ready', () => {
+    console.log(`${client.user.username} is online`);
+});
+
+let prompt_txt = fs.readFileSync('prompt.txt', 'utf-8');
+let conversationLog = [
+    { role: 'system', content: prompt_txt },
+  ];
+client.on("messageCreate", async (message) => {
     if (message.author.bot) return;
-    prompt += `You: ${message.content}\n`;
-   (async () => {
-         const gptResponse = await openai.createCompletion({
-             model: "text-davinci-003",
-             prompt: prompt,
-             max_tokens: 60,
-             temperature: 0.3,
-             top_p: 0.3,
-             presence_penalty: 0,
-             frequency_penalty: 0.5,
-           });
-         message.reply(`${gptResponse.data.choices[0].text.substring(5)}`);
-         prompt += `${gptResponse.data.choices[0].text}\n`;
-     })();
-});    
+    if (message.channel.id !== process.env.CHANNEL_ID) return;
+    if (message.content.startsWith('!')) return;
+    const input = `You: ${message.content}`; //Construct the input based on message content
+    let gptResponse = "";
+
+    try {
+        await message.channel.sendTyping();
+        let prevMessages = await message.channel.messages.fetch({ limit: 15 });
+        prevMessages.reverse();
+        
+        prevMessages.forEach((msg) => {
+          if (msg.content.startsWith('!')) return;
+          if (msg.author.id !== client.user.id && message.author.bot) return;
+          if (msg.author.id == client.user.id) {
+            conversationLog.push({
+              role: 'assistant',
+              content: msg.content,
+              name: msg.author.username
+                .replace(/\s+/g, '_')
+                .replace(/[^\w\s]/gi, ''),
+            });
+          }
+    
+          if (msg.author.id == message.author.id) {
+            conversationLog.push({
+              role: 'user',
+              content: msg.content,
+              name: message.author.username
+                .replace(/\s+/g, '_')
+                .replace(/[^\w\s]/gi, ''),
+            });
+          }
+        });
+    
+        const result = await openai
+          .createChatCompletion({
+            model: 'gpt-3.5-turbo',
+            messages: conversationLog,
+            // max_tokens: 256, // limit token usage
+          })
+          .catch((error) => {
+            console.log(`OPENAI ERR: ${error}`);
+          });
+        message.reply(result.data.choices[0].message);
+      } catch (error) {
+        console.log(`ERR: ${error}`);
+      }
+    });    
+
 client.login(process.env.DISCORDTOKEN); //KEEP THIS SECRET
