@@ -38,7 +38,10 @@ client.on('ready', () => {
 });
 let randoprompt_txt = fs.readFileSync('randoprompt.txt', 'utf-8');
 let prompt_txt = fs.readFileSync('prompt.txt', 'utf-8');
-
+// Retrieve the comma-separated string of allowed channel IDs from the environment
+const allowedChannelIDsString = process.env.CHANNEL_IDS;
+// Split the string into an array of individual channel IDs
+const allowedChannelIDs = allowedChannelIDsString.split(',');
 client.on("messageCreate", async (message) => {
     // ADD RANDOM CHANCE TO DO STUFF HERE
     // console.log(message.content + " len:" + message.content.length) [DEBUG]
@@ -51,7 +54,7 @@ client.on("messageCreate", async (message) => {
             ];
         // DO RANDOM FACT PROMPT
             if (message.author.bot) return;
-            if (!(process.env.CHANNEL_IDS.includes(message.channel.id))) return;
+            if (!(allowedChannelIDs.includes(message.channel.id))) return;
             if (message.content.startsWith('!')) return;
             //if(message.toString.length < 22) return; //Only respond to longer messages
             const input = randoprompt_txt; //Construct the input based on message content
@@ -94,7 +97,7 @@ client.on("messageCreate", async (message) => {
                 { role: 'system', content: prompt_txt },
             ];
             if (message.author.bot) return;
-            if (!(process.env.CHANNEL_IDS.includes(message.channel.id))) return;
+            if (!(allowedChannelIDs.includes(message.channel.id))) return;
             if (message.content.startsWith('!')) return;
             const input = `You: ${message.content}`; //Construct the input based on message content
             let gptResponse = "";
