@@ -41,21 +41,24 @@ let prompt_txt = fs.readFileSync('prompt.txt', 'utf-8');
 
 client.on("messageCreate", async (message) => {
     // ADD RANDOM CHANCE TO DO STUFF HERE
-
+    console.log(message.content + message.content.length)
     // RANDOM RESPOND OR RANDFACT
-    if (generateRandomBooleanWithPercentage(90)){
-        console.log("Doing Random Prompt!")
+    if (generateRandomBooleanWithPercentage(50)){
         let conversationLog = [
             { role: 'system', content: "You are an incredibly complex AI with a vast understanding of History, Culture, Science, Math, and everything. You think of ten prompts but only answer one. You do not show any prompts." },
           ];
        // DO RANDOM FACT PROMPT
-       if (message.author.bot) return;
+        if (message.author.bot) return;
         if (message.channel.id !== process.env.CHANNEL_ID) return;
         if (message.content.startsWith('!')) return;
+        if (message.content.length < 1000) return; //Only respond to longer messages
+        //if(message.toString.length < 22) return; //Only respond to longer messages
         const input = randoprompt_txt; //Construct the input based on message content
         let gptResponse = "";
 
         try {
+            console.log("Doing Random Prompt!")
+            await message.channel.sendTyping();
             conversationLog.push({
                 role: 'user',
                 content: randoprompt_txt,
@@ -67,7 +70,7 @@ client.on("messageCreate", async (message) => {
             .createChatCompletion({
                 model: 'gpt-3.5-turbo',
                 messages: conversationLog,
-                // max_tokens: 256, // limit token usage
+                max_tokens: 256, // limit token usage
             })
             .catch((error) => {
                 console.log(`OPENAI ERR: ${error}`);
@@ -75,7 +78,7 @@ client.on("messageCreate", async (message) => {
 
             const originalText = result.data.choices[0].message.content
             console.log(originalText)
-            const modifiedText = originalText.includes("Σ: ") ? originalText.replace("Σ: ", "") : originalText;
+            let modifiedText = originalText.includes("Answer: ") ? originalText.replace("Answer: ", "") : originalText;
             
             message.reply(modifiedText);
             
@@ -84,8 +87,8 @@ client.on("messageCreate", async (message) => {
             console.log(`ERR: ${error}`);
         }
     }
-        
     else{
+        console.log("Doing User Prompt!")
         let conversationLog = [
             { role: 'system', content: prompt_txt },
           ];
@@ -128,7 +131,7 @@ client.on("messageCreate", async (message) => {
             .createChatCompletion({
                 model: 'gpt-3.5-turbo',
                 messages: conversationLog,
-                // max_tokens: 256, // limit token usage
+                max_tokens: 256, // limit token usage
             })
             .catch((error) => {
                 console.log(`OPENAI ERR: ${error}`);
@@ -136,8 +139,9 @@ client.on("messageCreate", async (message) => {
 
             const originalText = result.data.choices[0].message.content
             console.log(originalText)
-            const modifiedText = originalText.includes("Σ: ") ? originalText.replace("Σ: ", "") : originalText;
-            
+            let modifiedText = originalText.includes("Σ:") ? originalText.replace("Σ:", "") : originalText;
+            modifiedText = modifiedText.includes("Here is the requested response:") ? modifiedText.replace("Here is the requested response:", "") : modifiedText;
+            modifiedText = modifiedText.includes("here is the requested response:") ? modifiedText.replace("here is the requested response:", "") : modifiedText;
             message.reply(modifiedText);
             
             //message.reply(result.data.choices[0].message);
