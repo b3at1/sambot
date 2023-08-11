@@ -36,20 +36,59 @@ const openai = new OpenAIApi(configuration);
 client.on('ready', () => {
     console.log(`${client.user.username} is online`);
 });
-
+let randoprompt_txt = fs.readFileSync('randoprompt.txt', 'utf-8');
 let prompt_txt = fs.readFileSync('prompt.txt', 'utf-8');
-let conversationLog = [
-    { role: 'system', content: prompt_txt },
-  ];
+
 client.on("messageCreate", async (message) => {
     // ADD RANDOM CHANCE TO DO STUFF HERE
 
     // RANDOM RESPOND OR RANDFACT
-    if (generateRandomBooleanWithPercentage(50)){
+    if (generateRandomBooleanWithPercentage(90)){
+        console.log("Doing Random Prompt!")
+        let conversationLog = [
+            { role: 'system', content: "You are an incredibly complex AI with a vast understanding of History, Culture, Science, Math, and everything. You think of ten prompts but only answer one. You do not show any prompts." },
+          ];
        // DO RANDOM FACT PROMPT
+       if (message.author.bot) return;
+        if (message.channel.id !== process.env.CHANNEL_ID) return;
+        if (message.content.startsWith('!')) return;
+        const input = randoprompt_txt; //Construct the input based on message content
+        let gptResponse = "";
+
+        try {
+            conversationLog.push({
+                role: 'user',
+                content: randoprompt_txt,
+                name: message.author.username
+                    .replace(/\s+/g, '_')
+                    .replace(/[^\w\s]/gi, ''),
+                });
+            const result = await openai
+            .createChatCompletion({
+                model: 'gpt-3.5-turbo',
+                messages: conversationLog,
+                // max_tokens: 256, // limit token usage
+            })
+            .catch((error) => {
+                console.log(`OPENAI ERR: ${error}`);
+            });
+
+            const originalText = result.data.choices[0].message.content
+            console.log(originalText)
+            const modifiedText = originalText.includes("Σ: ") ? originalText.replace("Σ: ", "") : originalText;
+            
+            message.reply(modifiedText);
+            
+            //message.reply(result.data.choices[0].message);
+        } catch (error) {
+            console.log(`ERR: ${error}`);
+        }
     }
         
     else{
+        let conversationLog = [
+            { role: 'system', content: prompt_txt },
+          ];
         if (message.author.bot) return;
         if (message.channel.id !== process.env.CHANNEL_ID) return;
         if (message.content.startsWith('!')) return;
@@ -105,6 +144,6 @@ client.on("messageCreate", async (message) => {
         } catch (error) {
             console.log(`ERR: ${error}`);
         }
-        });    
     }
+        });    
 client.login(process.env.DISCORDTOKEN); //KEEP THIS SECRET
