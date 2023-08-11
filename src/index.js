@@ -43,7 +43,7 @@ client.on("messageCreate", async (message) => {
     // ADD RANDOM CHANCE TO DO STUFF HERE
     // console.log(message.content + " len:" + message.content.length) [DEBUG]
     if (message.content.length < 22) return; 
-    if (generateRandomBooleanWithPercentage(4)){ // has a 4% chance to respond to any message len >= 22
+    if (generateRandomBooleanWithPercentage(6)){ // has a 6% chance to respond to any message len >= 22
         // RANDOM RESPOND OR RANDFACT
         if (generateRandomBooleanWithPercentage(75)){ // 75% chance of random response, 25% response to user
             let conversationLog = [
