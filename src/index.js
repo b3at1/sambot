@@ -51,7 +51,7 @@ client.on("messageCreate", async (message) => {
             ];
         // DO RANDOM FACT PROMPT
             if (message.author.bot) return;
-            if (message.channel.id !== process.env.CHANNEL_ID) return;
+            if (!(process.env.CHANNEL_IDS.includes(message.channel.id))) return;
             if (message.content.startsWith('!')) return;
             //if(message.toString.length < 22) return; //Only respond to longer messages
             const input = randoprompt_txt; //Construct the input based on message content
@@ -94,7 +94,7 @@ client.on("messageCreate", async (message) => {
                 { role: 'system', content: prompt_txt },
             ];
             if (message.author.bot) return;
-            if (message.channel.id !== process.env.CHANNEL_ID) return;
+            if (!(process.env.CHANNEL_IDS.includes(message.channel.id))) return;
             if (message.content.startsWith('!')) return;
             const input = `You: ${message.content}`; //Construct the input based on message content
             let gptResponse = "";
