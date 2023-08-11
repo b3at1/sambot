@@ -76,7 +76,14 @@ client.on("messageCreate", async (message) => {
           .catch((error) => {
             console.log(`OPENAI ERR: ${error}`);
           });
-        message.reply(result.data.choices[0].message);
+
+          const originalText = result.data.choices[0].message.content
+          console.log(originalText)
+          const modifiedText = originalText.includes("Σ: ") ? originalText.replace("Σ: ", "") : originalText;
+          
+          message.reply(modifiedText);
+          
+        //message.reply(result.data.choices[0].message);
       } catch (error) {
         console.log(`ERR: ${error}`);
       }
