@@ -14,7 +14,7 @@ function generateRandomBooleanWithPercentage(percentage) {
   
 async function sendStatusUpdate(channel_id){
     const channel = await client.channels.fetch(channel_id);
-    channel.send("tessing 123");
+    channel.send("wow, what is this?? Sambot is back with more functionality. Sambot 2.0 is online baybee!!!");
 }
 const client = new Client({
     intents: [
