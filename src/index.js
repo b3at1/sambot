@@ -49,6 +49,43 @@ let randoprompt_txt = fs.readFileSync('randoprompt.txt', 'utf-8');
 let prompt_txt = fs.readFileSync('prompt.txt', 'utf-8');
 
 client.on("messageCreate", async (message) => {
+    if (!(allowedChannelIDs.includes(message.channel.id))) return; //only work in currently permitted channels
+    
+    
+    // hard coded my birthday bc why not
+    if (message.author.id ==="224290502340509697"){
+        try {
+            let date = new Date();
+            if(date.toString().includes("Jan 06") && generateRandomBooleanWithPercentage(33)){
+                // I know this is kinda dumb, also 33% chance to spam
+                await message.channel.sendTyping();
+                message.reply(":confetti_ball:Happy birthday Sammy wammy :birthday:, you coded me to spam you today :heart:");
+            }
+        } catch (error) {
+            console.log(`birthday not working`);
+        }
+    }
+
+    // 69 GIF response
+    if (message.content.includes("69") || message.content.toLowerCase().includes("sixtynine") || message.content.toLowerCase().includes("sixty-nine")
+    || message.content.toLowerCase().includes("six nine") || message.content.toLowerCase().includes("six-nine") || message.content.toLowerCase().includes("sixty nine")){
+        try {
+            await message.channel.sendTyping();
+            message.reply("https://tenor.com/view/nice-gif-21458880");
+        } catch (error) {
+            console.log(`Noooo, gif didn't send :()`);
+        }
+
+    }
+    else if(message.content.includes("6 9")){
+        try {
+            await message.channel.sendTyping();
+            message.reply("I bet you think you're so funny huh.");
+        } catch (error) {
+            console.log(`uh oh error pepperroni)`);
+        }
+    }
+
     // console.log(message.content + " len:" + message.content.length) [DEBUG]
     if (message.content.length < 22) return; 
     if (generateRandomBooleanWithPercentage(6)){ // has a 6% chance to respond to any message len >= 22
