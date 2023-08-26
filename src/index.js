@@ -12,7 +12,10 @@ function generateRandomBooleanWithPercentage(percentage) {
     return randomValue < percentage;
   }
   
-
+async function sendStatusUpdate(channel_id){
+    const channel = await client.channels.fetch(channel_id);
+    channel.send("tessing 123");
+}
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -33,17 +36,19 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-client.on('ready', () => {
-    console.log(`${client.user.username} is online`);
-});
-let randoprompt_txt = fs.readFileSync('randoprompt.txt', 'utf-8');
-let prompt_txt = fs.readFileSync('prompt.txt', 'utf-8');
 // Retrieve the comma-separated string of allowed channel IDs from the environment
 const allowedChannelIDsString = process.env.CHANNEL_IDS;
 // Split the string into an array of individual channel IDs
 const allowedChannelIDs = allowedChannelIDsString.split(',');
+
+client.on('ready', () => {
+    console.log(`${client.user.username} is online`);
+    allowedChannelIDs.forEach(sendStatusUpdate); // sends a message on start up
+});
+let randoprompt_txt = fs.readFileSync('randoprompt.txt', 'utf-8');
+let prompt_txt = fs.readFileSync('prompt.txt', 'utf-8');
+
 client.on("messageCreate", async (message) => {
-    // ADD RANDOM CHANCE TO DO STUFF HERE
     // console.log(message.content + " len:" + message.content.length) [DEBUG]
     if (message.content.length < 22) return; 
     if (generateRandomBooleanWithPercentage(6)){ // has a 6% chance to respond to any message len >= 22
