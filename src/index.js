@@ -49,9 +49,18 @@ let randoprompt_txt = fs.readFileSync('randoprompt.txt', 'utf-8');
 let prompt_txt = fs.readFileSync('prompt.txt', 'utf-8');
 
 client.on("messageCreate", async (message) => {
-    if (!(allowedChannelIDs.includes(message.channel.id))) return; //only work in currently permitted channels
-    
-    
+    if (!(allowedChannelIDs.includes(message.channel.id))) return; //only work in currently permitted channel
+    if (message.author.id == client.user.id && message.author.bot) return;
+    // alanbot beef
+    if (message.content.includes("alanbot")){
+        try {
+            await message.channel.sendTyping();
+            message.reply("sambot > alanbot");
+        } catch (error) {
+            console.log(`beef bad)`);
+        }
+    }
+
     // hard coded my birthday bc why not
     if (message.author.id ==="224290502340509697"){
         try {
