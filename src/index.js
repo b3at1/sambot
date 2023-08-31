@@ -14,7 +14,7 @@ function generateRandomBooleanWithPercentage(percentage) {
   
 async function sendStatusUpdate(channel_id){
     const channel = await client.channels.fetch(channel_id);
-    channel.send("wow, what is this?? Sambot is back with more functionality. Sambot 2.0 is online baybee!!!");
+    channel.send("wow, what is this?? Sambot is back after an emergency patch. Sambot 2.1 is online baybee!!!");
 }
 const client = new Client({
     intents: [
@@ -75,9 +75,17 @@ client.on("messageCreate", async (message) => {
         }
     }
 
-    // 69 GIF response
-    if (message.content.includes("69") || message.content.toLowerCase().includes("sixtynine") || message.content.toLowerCase().includes("sixty-nine")
-    || message.content.toLowerCase().includes("six nine") || message.content.toLowerCase().includes("six-nine") || message.content.toLowerCase().includes("sixty nine")){
+    // 69 GIFponse
+    /*
+    console.log("og  " + message.content);
+    noMentions = message.content
+    noMentions = noMentions.replace(/<@!?[^>]+>/g, "");
+    console.log("noment " + noMentions);
+
+    FIX THIS AT SOME POINT
+   
+    if (noMentions.includes("69") ||noMentions.toLowerCase().includes("sixtynine") || noMentions.toLowerCase().includes("sixty-nine")
+    || noMentions.toLowerCase().includes("six nine") || noMentions.toLowerCase().includes("six-nine") || noMentions.toLowerCase().includes("sixty nine")){
         try {
             await message.channel.sendTyping();
             message.reply("https://tenor.com/view/nice-gif-21458880");
@@ -86,7 +94,7 @@ client.on("messageCreate", async (message) => {
         }
 
     }
-    else if(message.content.includes("6 9")){
+    else if(noMentions.includes("6 9")){
         try {
             await message.channel.sendTyping();
             message.reply("I bet you think you're so funny huh.");
@@ -94,9 +102,9 @@ client.on("messageCreate", async (message) => {
             console.log(`uh oh error pepperroni)`);
         }
     }
-
+    */
     // console.log(message.content + " len:" + message.content.length) [DEBUG]
-    if (message.content.length < 22) return; 
+    if (noMentions.length < 22) return; 
     if (generateRandomBooleanWithPercentage(6)){ // has a 6% chance to respond to any message len >= 22
         // RANDOM RESPOND OR RANDFACT
         if (generateRandomBooleanWithPercentage(50)){ // 50% chance of random response, 50% response to user
