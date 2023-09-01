@@ -76,12 +76,12 @@ client.on("messageCreate", async (message) => {
     }
 
     // 69 GIFponse
-    /*
+    
     console.log("og  " + message.content);
     noMentions = message.content
     noMentions = noMentions.replace(/<@!?[^>]+>/g, "");
     console.log("noment " + noMentions);
-
+/*
     FIX THIS AT SOME POINT
    
     if (noMentions.includes("69") ||noMentions.toLowerCase().includes("sixtynine") || noMentions.toLowerCase().includes("sixty-nine")
@@ -104,7 +104,7 @@ client.on("messageCreate", async (message) => {
     }
     */
     // console.log(message.content + " len:" + message.content.length) [DEBUG]
-    if (noMentions.length < 22) return; 
+    if (message.content.length < 22) return; 
     if (generateRandomBooleanWithPercentage(6)){ // has a 6% chance to respond to any message len >= 22
         // RANDOM RESPOND OR RANDFACT
         if (generateRandomBooleanWithPercentage(50)){ // 50% chance of random response, 50% response to user
