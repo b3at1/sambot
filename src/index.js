@@ -14,7 +14,7 @@ function generateRandomBooleanWithPercentage(percentage) {
   
 async function sendStatusUpdate(channel_id){
     const channel = await client.channels.fetch(channel_id);
-    channel.send("wow, what is this?? Sambot is back after an emergency patch. Sambot 2.1 is online baybee!!!");
+    channel.send("wow, what is this?? Sambot is back and should not reply to other bots. Sambot 2.2 is online baybee!!!");
 }
 const client = new Client({
     intents: [
@@ -50,7 +50,7 @@ let prompt_txt = fs.readFileSync('prompt.txt', 'utf-8');
 
 client.on("messageCreate", async (message) => {
     if (!(allowedChannelIDs.includes(message.channel.id))) return; //only work in currently permitted channel
-    if (message.author.id == client.user.id && message.author.bot) return;
+    if (message.author.id == client.user.id || message.author.bot) return;
     // alanbot beef
     if (message.content.includes("alanbot")){
         try {
@@ -105,7 +105,7 @@ client.on("messageCreate", async (message) => {
     */
     // console.log(message.content + " len:" + message.content.length) [DEBUG]
     if (message.content.length < 22) return; 
-    if (generateRandomBooleanWithPercentage(6)){ // has a 6% chance to respond to any message len >= 22
+    if (generateRandomBooleanWithPercentage(4)){ // has a 4% chance to respond to any message len >= 22
         // RANDOM RESPOND OR RANDFACT
         if (generateRandomBooleanWithPercentage(50)){ // 50% chance of random response, 50% response to user
             let conversationLog = [
