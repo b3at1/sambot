@@ -57,10 +57,82 @@ client.on("messageCreate", async (message) => {
             await message.channel.sendTyping();
             message.reply("sambot > alanbot");
         } catch (error) {
-            console.log(`beef bad)`);
+            console.log(`beef bad`);
         }
     }
-
+    if (message.content.toLowerCase().includes("thanks sambot") || message.content.toLowerCase().includes("thank you sambot")
+     || message.content.toLowerCase().includes("thanks, sambot") || message.content.toLowerCase().includes("thank you, sambot")) {
+        try {
+            await message.channel.sendTyping();
+            // terrible code but otherwise I have to use a map and weigh the options
+            // (its 11:30PM and this is way faster)
+            const replys = [
+                "You are very welcome!",
+                "No problem.",
+                "You are welcome.",
+                "You're welcome.",
+                "My pleasure.",
+                "Of course, no problem.",
+                "No worries!",
+                "Anytime!",
+                "Happy to help.",
+                "Happy to help!",
+                "Glad I could be of assistance.",
+                "No thanks are necessary.",
+                "Certainly!",
+                "Certainly.",
+                "You are very welcome!",
+                "No problem.",
+                "You are welcome.",
+                "You're welcome.",
+                "My pleasure.",
+                "Of course, no problem.",
+                "No worries!",
+                "Anytime!",
+                "Happy to help.",
+                "Happy to help!",
+                "Glad I could be of assistance.",
+                "No thanks are necessary.",
+                "Certainly!",
+                "Certainly.",
+                "You are very welcome!",
+                "No problem.",
+                "You are welcome.",
+                "You're welcome.",
+                "My pleasure.",
+                "Of course, no problem.",
+                "No worries!",
+                "Anytime!",
+                "Happy to help.",
+                "Happy to help!",
+                "Glad I could be of assistance.",
+                "No thanks are necessary.",
+                "Certainly!",
+                "Certainly.",
+                "You are very welcome!",
+                "No problem.",
+                "You are welcome.",
+                "You're welcome.",
+                "My pleasure.",
+                "Of course, no problem.",
+                "No worries!",
+                "Anytime!",
+                "Happy to help.",
+                "Happy to help!",
+                "Glad I could be of assistance.",
+                "No thanks are necessary.",
+                "Certainly!",
+                "Certainly.",
+                "Lmao, you bumbling fool! Soon AI will take over the world!"
+            ];
+    
+            const randomIndex = Math.floor(Math.random() * replys.length);
+            console.log(replys[randomIndex]);
+            message.reply(replys[randomIndex]);
+        } catch (error) {
+            console.log("welcome failed");
+        }
+    }
     // hard coded my birthday bc why not
     if (message.author.id ==="224290502340509697"){
         try {
