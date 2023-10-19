@@ -14,7 +14,7 @@ function generateRandomBooleanWithPercentage(percentage) {
   
 async function sendStatusUpdate(channel_id){
     const channel = await client.channels.fetch(channel_id);
-    channel.send("wow, what is this?? Sambot has proper manners. Sambot 2.3 is online baybee!!!");
+    channel.send("Turn up the heat! Sambot now has spicier random prompting (might also hallucinate) Sambot 2.4 is online baybee!!!");
 }
 const client = new Client({
     intents: [
@@ -64,8 +64,6 @@ client.on("messageCreate", async (message) => {
      || message.content.toLowerCase().includes("thanks, sambot") || message.content.toLowerCase().includes("thank you, sambot")) {
         try {
             await message.channel.sendTyping();
-            // terrible code but otherwise I have to use a map and weigh the options
-            // (its 11:30PM and this is way faster)
             const replys = [
                 "You are very welcome!",
                 "No problem.",
@@ -149,10 +147,8 @@ client.on("messageCreate", async (message) => {
 
     // 69 GIFponse
     
-    console.log("og  " + message.content);
     noMentions = message.content
     noMentions = noMentions.replace(/<@!?[^>]+>/g, "");
-    console.log("noment " + noMentions);
 /*
     FIX THIS AT SOME POINT
    
@@ -179,7 +175,7 @@ client.on("messageCreate", async (message) => {
     if (message.content.length < 22) return; 
     if (generateRandomBooleanWithPercentage(4)){ // has a 4% chance to respond to any message len >= 22
         // RANDOM RESPOND OR RANDFACT
-        if (generateRandomBooleanWithPercentage(50)){ // 50% chance of random response, 50% response to user
+        if (generateRandomBooleanWithPercentage(100)){ // 50% chance of random response, 50% response to user
             let conversationLog = [
                 { role: 'system', content: "You are an incredibly complex AI with a vast understanding of History, Culture, Science, Math, and everything. You think of ten prompts but only answer one. You do not show any prompts." },
             ];
@@ -205,7 +201,11 @@ client.on("messageCreate", async (message) => {
                 .createChatCompletion({
                     model: 'gpt-3.5-turbo',
                     messages: conversationLog,
-                    max_tokens: 256, // limit token usage
+                    max_tokens: 200, // limit token usage
+                    temperature: 1.40, // FEVERISH AI, 1.5 is the threshold for complete gibberish
+                    top_p: 1,
+                    frequency_penalty: 0,
+                    presence_penalty: 0.4, // make it use more varied words
                 })
                 .catch((error) => {
                     console.log(`OPENAI ERR: ${error}`);
@@ -263,11 +263,12 @@ client.on("messageCreate", async (message) => {
                 });
             
                 const result = await openai
-                .createChatCompletion({
+                .createChatCompletion({  // just use standard stuff for normal response
                     model: 'gpt-3.5-turbo',
                     messages: conversationLog,
-                    max_tokens: 256, // limit token usage
+                    max_tokens: 200, // limit token usage
                 })
+                
                 .catch((error) => {
                     console.log(`OPENAI ERR: ${error}`);
                 });
