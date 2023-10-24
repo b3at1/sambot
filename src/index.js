@@ -1,8 +1,7 @@
 require('dotenv').config();
-const { GatewayIntentBits, Client } = require('discord.js');
+const { ActivityType, GatewayIntentBits, Client } = require('discord.js');
 const { Configuration, OpenAIApi } = require('openai');
 const fs = require('fs');
-
 function generateRandomBooleanWithPercentage(percentage) {
     if (percentage < 0 || percentage > 100) {
       throw new Error('Percentage must be between 0 and 100');
@@ -14,7 +13,7 @@ function generateRandomBooleanWithPercentage(percentage) {
   
 async function sendStatusUpdate(channel_id){
     const channel = await client.channels.fetch(channel_id);
-    channel.send("Turn up the heat! Sambot now has spicier random prompting (might also hallucinate) Sambot 2.4 is online baybee!!!");
+    channel.send("Good idea flocto. Sambot now has description and activity and presence. Sambot 2.5 is online baybee!!!");
 }
 const client = new Client({
     intents: [
@@ -30,6 +29,7 @@ const client = new Client({
     ],
 });
 
+
 const configuration = new Configuration({
     apiKey: process.env.OPENAPIKEY,
 });
@@ -43,6 +43,10 @@ const allowedChannelIDs = allowedChannelIDsString.split(',');
 
 client.on('ready', () => {
     console.log(`${client.user.username} is online`);
+    // set status
+    // https://stackoverflow.com/questions/73049373/setpresence-activity-type-in-discord-js-v14-can-only-be-set-to-playing
+    client.user.setPresence({ activities: [{ name: 'food' }], status: 'online' });
+    client.user.setActivity('Chon', { type: ActivityType.Listening });;
     allowedChannelIDs.forEach(sendStatusUpdate); // sends a message on start up
 });
 let randoprompt_txt = fs.readFileSync('randoprompt.txt', 'utf-8');
