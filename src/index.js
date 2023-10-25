@@ -2,6 +2,8 @@ require('dotenv').config();
 const { ActivityType, GatewayIntentBits, Client } = require('discord.js');
 const { Configuration, OpenAIApi } = require('openai');
 const fs = require('fs');
+const { machine } = require('os');
+
 function generateRandomBooleanWithPercentage(percentage) {
     if (percentage < 0 || percentage > 100) {
       throw new Error('Percentage must be between 0 and 100');
@@ -15,6 +17,18 @@ async function sendStatusUpdate(channel_id){
     const channel = await client.channels.fetch(channel_id);
     channel.send("Good idea flocto. Sambot now has description and activity and presence. Sambot 2.5 is online baybee!!!");
 }
+
+// FLOCTO TIME TO SLEEP
+async function checkFloctoBedtime(channel_id) {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const channel = await client.channels.fetch(channel_id);
+    // console.log("The time is " + hours + ":" + minutes)
+    if (hours === 23 && minutes === 0) {
+        channel.send("<@300797085437919233> Time to go to sleep! 😴");
+    } 
+  }
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -48,6 +62,10 @@ client.on('ready', () => {
     client.user.setPresence({ activities: [{ name: 'food' }], status: 'online' });
     client.user.setActivity('Chon', { type: ActivityType.Listening });;
     allowedChannelIDs.forEach(sendStatusUpdate); // sends a message on start up
+    setInterval(() => {
+        allowedChannelIDs.forEach(channel_id => checkFloctoBedtime(channel_id));
+      }, 45000); // every 45 seconds
+     // checks if its 11:00 PM
 });
 let randoprompt_txt = fs.readFileSync('randoprompt.txt', 'utf-8');
 let prompt_txt = fs.readFileSync('prompt.txt', 'utf-8');
