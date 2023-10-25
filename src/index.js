@@ -15,7 +15,7 @@ function generateRandomBooleanWithPercentage(percentage) {
   
 async function sendStatusUpdate(channel_id){
     const channel = await client.channels.fetch(channel_id);
-    channel.send("Good idea flocto. Sambot now has description and activity and presence. Sambot 2.5 is online baybee!!!");
+    channel.send("Sambot now reminds Flocto of his bedtime. Sambot 2.6 is online baybee!!!");
 }
 
 // FLOCTO TIME TO SLEEP
