@@ -20,9 +20,12 @@ async function sendStatusUpdate(channel_id){
 
 // FLOCTO TIME TO SLEEP
 async function checkFloctoBedtime(channel_id) {
-    const now = new Date();
+    var now = new Date()
+    now = new Date((typeof now === "string" ? new Date(now) : now).toLocaleString("en-US", {timeZone: "America/Chicago"}));
     const hours = now.getHours();
+    //console.log(now)
     const minutes = now.getMinutes();
+    //console.log(hours + ":" + minutes)
     const channel = await client.channels.fetch(channel_id);
     // console.log("The time is " + hours + ":" + minutes)
     if (hours === 23 && minutes === 0) {
@@ -54,6 +57,7 @@ const openai = new OpenAIApi(configuration);
 const allowedChannelIDsString = process.env.CHANNEL_IDS;
 // Split the string into an array of individual channel IDs
 const allowedChannelIDs = allowedChannelIDsString.split(',');
+const FloctoChannelID = [allowedChannelIDsString.split(',')[0]]; // so bad code
 
 client.on('ready', () => {
     console.log(`${client.user.username} is online`);
@@ -63,7 +67,7 @@ client.on('ready', () => {
     client.user.setActivity('Chon', { type: ActivityType.Listening });;
     allowedChannelIDs.forEach(sendStatusUpdate); // sends a message on start up
     setInterval(() => {
-        allowedChannelIDs.forEach(channel_id => checkFloctoBedtime(channel_id));
+        FloctoChannelID.forEach(channel_id => checkFloctoBedtime(channel_id));
       }, 45000); // every 45 seconds
      // checks if its 11:00 PM
 });
