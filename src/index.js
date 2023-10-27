@@ -201,7 +201,7 @@ client.on("messageCreate", async (message) => {
     if (message.content.length < 22) return; 
     if (generateRandomBooleanWithPercentage(4)){ // has a 4% chance to respond to any message len >= 22
         // RANDOM RESPOND OR RANDFACT
-        if (generateRandomBooleanWithPercentage(100)){ // 50% chance of random response, 50% response to user
+        if (generateRandomBooleanWithPercentage(50)){ // 50% chance of random response, 50% response to user
             let conversationLog = [
                 { role: 'system', content: "You are an incredibly complex AI with a vast understanding of History, Culture, Science, Math, and everything. You think of ten prompts but only answer one. You do not show any prompts." },
             ];
