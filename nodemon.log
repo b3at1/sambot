@@ -1,20 +1,7 @@
-nohup: ignoring input
 [33m[nodemon] 3.0.1[39m
 [33m[nodemon] to restart at any time, enter `rs`[39m
 [33m[nodemon] watching path(s): *.*[39m
 [33m[nodemon] watching extensions: js,mjs,cjs,json[39m
 [32m[nodemon] starting `node src/index.js`[39m
-node:events:368
-      throw er; // Unhandled 'error' event
-      ^
-
-Error: EPERM: operation not permitted, read
-Emitted 'error' event on ReadStream instance at:
-    at emitErrorNT (node:internal/streams/destroy:157:8)
-    at errorOrDestroy (node:internal/streams/destroy:220:7)
-    at node:internal/fs/streams:258:9
-    at FSReqCallback.wrapper [as oncomplete] (node:fs:660:5) {
-  errno: -4048,
-  code: 'EPERM',
-  syscall: 'read'
-}
+sambot is online
+Of course, no problem.

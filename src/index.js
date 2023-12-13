@@ -15,7 +15,7 @@ function generateRandomBooleanWithPercentage(percentage) {
   
 async function sendStatusUpdate(channel_id){
     const channel = await client.channels.fetch(channel_id);
-    channel.send("Sambot now reminds Flocto of his bedtime. Sambot 2.6 is online baybee!!!");
+    channel.send("Sambot now reminds Flocto of his new bedtime. Minor security patches have also been made. Sambot 2.7 is online baybee!!!");
 }
 
 // FLOCTO TIME TO SLEEP
@@ -28,7 +28,7 @@ async function checkFloctoBedtime(channel_id) {
     //console.log(hours + ":" + minutes)
     const channel = await client.channels.fetch(channel_id);
     // console.log("The time is " + hours + ":" + minutes)
-    if (hours === 23 && minutes === 0) {
+    if (hours === 23 && minutes === 30) {
         channel.send("<@300797085437919233> Time to go to sleep! 😴");
     } 
   }
