@@ -1,6 +1,6 @@
 require('dotenv').config();
 const { ActivityType, GatewayIntentBits, Client } = require('discord.js');
-const { Configuration, OpenAIApi } = require('openai');
+const OpenAIapi = require('openai');
 const fs = require('fs');
 const { machine } = require('os');
 
@@ -47,11 +47,8 @@ const client = new Client({
 });
 
 
-const configuration = new Configuration({
-    apiKey: process.env.OPENAPIKEY,
-});
+const openai = new OpenAIapi({ apiKey: process.env.OPENAPIKEY });
 
-const openai = new OpenAIApi(configuration);
 
 // Retrieve the comma-separated string of allowed channel IDs from the environment
 const allowedChannelIDsString = process.env.CHANNEL_IDS;
