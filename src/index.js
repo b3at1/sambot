@@ -15,7 +15,7 @@ function generateRandomBooleanWithPercentage(percentage) {
   
 async function sendStatusUpdate(channel_id){
     const channel = await client.channels.fetch(channel_id);
-    channel.send("Sambot now reminds Flocto of his new bedtime. Minor security patches have also been made. Sambot 2.7 is online baybee!!!");
+    channel.send("Sambot now uses openai V4. It actually works now, probably maybe. Sambot 2.8 is online baybee!!!");
 }
 
 // FLOCTO TIME TO SLEEP
@@ -196,7 +196,7 @@ client.on("messageCreate", async (message) => {
     */
     // console.log(message.content + " len:" + message.content.length) [DEBUG]
     if (message.content.length < 22) return; 
-    if (generateRandomBooleanWithPercentage(4)){ // has a 4% chance to respond to any message len >= 22
+    if (generateRandomBooleanWithPercentage(40)){ // has a 4% chance to respond to any message len >= 22
         // RANDOM RESPOND OR RANDFACT
         if (generateRandomBooleanWithPercentage(50)){ // 50% chance of random response, 50% response to user
             let conversationLog = [
@@ -220,8 +220,7 @@ client.on("messageCreate", async (message) => {
                         .replace(/\s+/g, '_')
                         .replace(/[^\w\s]/gi, ''),
                     });
-                const result = await openai
-                .createChatCompletion({
+                const result = await openai.chat.completions.create({
                     model: 'gpt-3.5-turbo',
                     messages: conversationLog,
                     max_tokens: 200, // limit token usage
@@ -234,7 +233,7 @@ client.on("messageCreate", async (message) => {
                     console.log(`OPENAI ERR: ${error}`);
                 });
 
-                const originalText = result.data.choices[0].message.content
+                const originalText = result.choices[0].message.content
                 console.log(originalText)
                 let modifiedText = originalText.includes("Answer: ") ? originalText.replace("Answer: ", "") : originalText;
                 
@@ -285,8 +284,7 @@ client.on("messageCreate", async (message) => {
                 }
                 });
             
-                const result = await openai
-                .createChatCompletion({  // just use standard stuff for normal response
+                const result = await openai.chat.completions.create({  // just use standard stuff for normal response
                     model: 'gpt-3.5-turbo',
                     messages: conversationLog,
                     max_tokens: 200, // limit token usage
@@ -296,7 +294,7 @@ client.on("messageCreate", async (message) => {
                     console.log(`OPENAI ERR: ${error}`);
                 });
 
-                const originalText = result.data.choices[0].message.content
+                const originalText = result.choices[0].message.content
                 console.log(originalText)
                 let modifiedText = originalText.includes("Σ:") ? originalText.replace("Σ:", "") : originalText;
                 modifiedText = modifiedText.includes("Here is the requested response:") ? modifiedText.replace("Here is the requested response:", "") : modifiedText;
