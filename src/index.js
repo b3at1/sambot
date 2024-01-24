@@ -1,9 +1,10 @@
 require('dotenv').config();
-const { ActivityType, GatewayIntentBits, Client } = require('discord.js');
-const OpenAIapi = require('openai');
+const { ActivityType, GatewayIntentBits, Client, Events } = require('discord.js');
+const { OpenAI } = require('openai');
 const fs = require('fs');
 const { machine } = require('os');
-
+const ALANBOT_DISCORD_ID = "1137902993384153200";
+const GEOGUESSRY_STR =  process.env.CHANNEL_GEOGUESSRY;
 function generateRandomBooleanWithPercentage(percentage) {
     if (percentage < 0 || percentage > 100) {
       throw new Error('Percentage must be between 0 and 100');
@@ -15,7 +16,7 @@ function generateRandomBooleanWithPercentage(percentage) {
   
 async function sendStatusUpdate(channel_id){
     const channel = await client.channels.fetch(channel_id);
-    channel.send("Sambot now uses openai V4. It actually works now, probably maybe. Sambot 2.8 is online baybee!!!");
+    channel.send("Sambot now says when Alanbot goes offline. Minor bug fixes. Flocto sleep early. Thank you DatHam for your contributions. Sambot 3.0 is online baybee!!!");
 }
 
 // FLOCTO TIME TO SLEEP
@@ -28,7 +29,7 @@ async function checkFloctoBedtime(channel_id) {
     //console.log(hours + ":" + minutes)
     const channel = await client.channels.fetch(channel_id);
     // console.log("The time is " + hours + ":" + minutes)
-    if (hours === 23 && minutes === 30) {
+    if (hours === 23 && minutes === 0) {
         channel.send("<@300797085437919233> Time to go to sleep! 😴");
     } 
   }
@@ -46,9 +47,7 @@ const client = new Client({
     ],
 });
 
-
-const openai = new OpenAIapi({ apiKey: process.env.OPENAPIKEY });
-
+const openai = new OpenAI({ apiKey: process.env.OPENAPIKEY});
 
 // Retrieve the comma-separated string of allowed channel IDs from the environment
 const allowedChannelIDsString = process.env.CHANNEL_IDS;
@@ -61,7 +60,21 @@ client.on('ready', () => {
     // set status
     // https://stackoverflow.com/questions/73049373/setpresence-activity-type-in-discord-js-v14-can-only-be-set-to-playing
     client.user.setPresence({ activities: [{ name: 'food' }], status: 'online' });
+
     client.user.setActivity('Chon', { type: ActivityType.Listening });;
+
+    client.on(Events.PresenceUpdate, (oldPresence, newPresence) => {
+        if(newPresence.member.id === ALANBOT_DISCORD_ID && newPresence.guild.id === GEOGUESSRY_STR ){
+            if (oldPresence?.status === 'online' && newPresence.status === 'offline') {
+                console.log("OFFILNE!")
+                client.channels.cache.get(allowedChannelIDsString).send(`${newPresence.user.tag} is offline! We will miss you :frowning:`);
+            }
+            if (oldPresence?.status === 'offline' && newPresence.status === 'online') {
+                client.channels.cache.get(allowedChannelIDsString).send(`${newPresence.user.tag} is back online! Yippee! :smile_cat:`);
+                console.log("Online!")
+            }
+        }
+    });
     allowedChannelIDs.forEach(sendStatusUpdate); // sends a message on start up
     setInterval(() => {
         FloctoChannelID.forEach(channel_id => checkFloctoBedtime(channel_id));
@@ -155,7 +168,7 @@ client.on("messageCreate", async (message) => {
         }
     }
     // hard coded my birthday bc why not
-    if (message.author.id ==="224290502340509697"){
+    if (message.author.id === B3AT_DISCORD_ID){
         try {
             let date = new Date();
             if(date.toLocaleString("en-US", {timeZone: "America/Chicago"}).includes("Jan 06") && generateRandomBooleanWithPercentage(33)){
