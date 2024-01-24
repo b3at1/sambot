@@ -67,10 +67,10 @@ client.on('ready', () => {
         if(newPresence.member.id === ALANBOT_DISCORD_ID && newPresence.guild.id === GEOGUESSRY_STR ){
             if (oldPresence?.status === 'online' && newPresence.status === 'offline') {
                 console.log("OFFILNE!")
-                client.channels.cache.get(allowedChannelIDsString).send(`${newPresence.user.tag} is offline! We will miss you :frowning:`);
+                client.channels.cache.get(allowedChannelIDsString).send(`<@${ALANBOT_DISCORD_ID}> is offline! We will miss you :frowning:`);
             }
             if (oldPresence?.status === 'offline' && newPresence.status === 'online') {
-                client.channels.cache.get(allowedChannelIDsString).send(`${newPresence.user.tag} is back online! Yippee! :smile_cat:`);
+                client.channels.cache.get(allowedChannelIDsString).send(`<@${ALANBOT_DISCORD_ID}> is back online! Yippee! :smile_cat:`);
                 console.log("Online!")
             }
         }
