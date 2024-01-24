@@ -4,6 +4,7 @@ const { OpenAI } = require('openai');
 const fs = require('fs');
 const { machine } = require('os');
 const ALANBOT_DISCORD_ID = "1137902993384153200";
+const B3AT_DISCORD_ID = "224290502340509697";
 const GEOGUESSRY_STR =  process.env.CHANNEL_GEOGUESSRY;
 function generateRandomBooleanWithPercentage(percentage) {
     if (percentage < 0 || percentage > 100) {
