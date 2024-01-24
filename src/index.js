@@ -1,6 +1,6 @@
 require('dotenv').config();
 const { ActivityType, GatewayIntentBits, Client } = require('discord.js');
-const { Configuration, OpenAIApi } = require('openai');
+const OpenAIapi = require('openai');
 const fs = require('fs');
 const { machine } = require('os');
 
@@ -15,7 +15,7 @@ function generateRandomBooleanWithPercentage(percentage) {
   
 async function sendStatusUpdate(channel_id){
     const channel = await client.channels.fetch(channel_id);
-    channel.send("Sambot now reminds Flocto of his bedtime. Sambot 2.6 is online baybee!!!");
+    channel.send("Sambot now uses openai V4. It actually works now, probably maybe. Sambot 2.8 is online baybee!!!");
 }
 
 // FLOCTO TIME TO SLEEP
@@ -28,7 +28,7 @@ async function checkFloctoBedtime(channel_id) {
     //console.log(hours + ":" + minutes)
     const channel = await client.channels.fetch(channel_id);
     // console.log("The time is " + hours + ":" + minutes)
-    if (hours === 23 && minutes === 0) {
+    if (hours === 23 && minutes === 30) {
         channel.send("<@300797085437919233> Time to go to sleep! 😴");
     } 
   }
@@ -47,11 +47,8 @@ const client = new Client({
 });
 
 
-const configuration = new Configuration({
-    apiKey: process.env.OPENAPIKEY,
-});
+const openai = new OpenAIapi({ apiKey: process.env.OPENAPIKEY });
 
-const openai = new OpenAIApi(configuration);
 
 // Retrieve the comma-separated string of allowed channel IDs from the environment
 const allowedChannelIDsString = process.env.CHANNEL_IDS;
@@ -201,7 +198,7 @@ client.on("messageCreate", async (message) => {
     if (message.content.length < 22) return; 
     if (generateRandomBooleanWithPercentage(4)){ // has a 4% chance to respond to any message len >= 22
         // RANDOM RESPOND OR RANDFACT
-        if (generateRandomBooleanWithPercentage(100)){ // 50% chance of random response, 50% response to user
+        if (generateRandomBooleanWithPercentage(50)){ // 50% chance of random response, 50% response to user
             let conversationLog = [
                 { role: 'system', content: "You are an incredibly complex AI with a vast understanding of History, Culture, Science, Math, and everything. You think of ten prompts but only answer one. You do not show any prompts." },
             ];
@@ -223,8 +220,7 @@ client.on("messageCreate", async (message) => {
                         .replace(/\s+/g, '_')
                         .replace(/[^\w\s]/gi, ''),
                     });
-                const result = await openai
-                .createChatCompletion({
+                const result = await openai.chat.completions.create({
                     model: 'gpt-3.5-turbo',
                     messages: conversationLog,
                     max_tokens: 200, // limit token usage
@@ -237,7 +233,7 @@ client.on("messageCreate", async (message) => {
                     console.log(`OPENAI ERR: ${error}`);
                 });
 
-                const originalText = result.data.choices[0].message.content
+                const originalText = result.choices[0].message.content
                 console.log(originalText)
                 let modifiedText = originalText.includes("Answer: ") ? originalText.replace("Answer: ", "") : originalText;
                 
@@ -288,8 +284,7 @@ client.on("messageCreate", async (message) => {
                 }
                 });
             
-                const result = await openai
-                .createChatCompletion({  // just use standard stuff for normal response
+                const result = await openai.chat.completions.create({  // just use standard stuff for normal response
                     model: 'gpt-3.5-turbo',
                     messages: conversationLog,
                     max_tokens: 200, // limit token usage
@@ -299,7 +294,7 @@ client.on("messageCreate", async (message) => {
                     console.log(`OPENAI ERR: ${error}`);
                 });
 
-                const originalText = result.data.choices[0].message.content
+                const originalText = result.choices[0].message.content
                 console.log(originalText)
                 let modifiedText = originalText.includes("Σ:") ? originalText.replace("Σ:", "") : originalText;
                 modifiedText = modifiedText.includes("Here is the requested response:") ? modifiedText.replace("Here is the requested response:", "") : modifiedText;
