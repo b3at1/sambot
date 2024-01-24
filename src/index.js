@@ -161,7 +161,7 @@ client.on("messageCreate", async (message) => {
     if (message.author.id ==="224290502340509697"){
         try {
             let date = new Date();
-            if(date.toString().includes("Jan 06") && generateRandomBooleanWithPercentage(33)){
+            if(date.toLocaleString("en-US", {timeZone: "America/Chicago"}).includes("Jan 06") && generateRandomBooleanWithPercentage(33)){
                 // I know this is kinda dumb, also 33% chance to spam
                 await message.channel.sendTyping();
                 message.reply(":confetti_ball:Happy birthday Sammy wammy :birthday:, you coded me to spam you today :heart:");
